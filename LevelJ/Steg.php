@@ -149,7 +149,24 @@ class Steg
     {
         $msg = '000010000100001000000';
         $this->bin2Text($msg);
+        $res = "";
 
+        list($width, $height) = getimagesize($dst);
+        $img = imagecreatefrompng($dst);
+
+        for ($i = 0; $i < $width; ++$i) {
+            for ($j = 0; $j < $height; ++$j) {
+
+                $rgb = imagecolorat($img, $i, $j);
+                $b = $rgb & 0x01;
+                $res = $res . strval($b);
+                if (strcmp(substr($res, -6), "111111") === 0) {
+                    print($this->bin2Text($res));
+                    return true;
+                }
+            }
+        }
+        print($this->bin2Text($res));
         return true;
     }
 
@@ -217,7 +234,7 @@ class Steg
         $plain = strtr($this->slugify($txt), $this->trans);
 
         // Ajout de 6x1 pour marquer la fin de la chaîne.
-        return $plain.'111111';
+        return $plain . '111111';
     }
 
     /**
