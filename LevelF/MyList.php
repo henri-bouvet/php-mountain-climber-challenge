@@ -113,7 +113,17 @@ class MyList
      */
     public function getFirstElementByValue($value)
     {
-        /** @TODO */
-        return $this;
+        return $this->recursiveSearch($this->getHead(), $value);
+    }
+
+    private function recursiveSearch($element, $value)
+    {
+        if (is_null($element)) {
+            return null;
+        } else if ($element->getValue() == $value) {
+            return $element;
+        } else {
+            return $this->recursiveSearch($element->getNext(), $value);
+        }
     }
 }
