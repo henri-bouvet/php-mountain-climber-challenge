@@ -80,13 +80,27 @@ class Compress
                 $b = $rgb & 0xFF;
                 $averageColor += ($r + $g + $b) / 3;
 
-                // @TODO - A COMPLETER -- COULEUR DOMINANTE
-                // fin @TODO
+                $colors['red'] += $r;
+                $colors['green'] += $g;
+                $colors['blue'] += $b;
             }
         }
 
         // @TODO - A COMPLETER -- COULEUR DOMINANTE
         // fin @TODO
+
+        $sc = 'none';
+        if ($colors['blue'] != $colors['red'] || $colors['red'] != $colors['green']) {
+            $max = 0;
+            foreach ($colors as $col => $value) {
+                if ($max < $value) {
+                    $max = $value;
+                    $sc = $col;
+                }
+            }
+        }
+
+        $this->infos['strongcolor'] = $this->trans[array('blue' => 5, 'green' => 7, 'red' => 10, 'none' => '13')[$sc]];
 
         // On fait la moyenne des moyennes - On divise par 16 car notre tableau va de l'index 0 à 15
         // et que la valeur maximale de la moyenne est 16
